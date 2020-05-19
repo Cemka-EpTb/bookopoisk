@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Bookopoisk</string>
+    <string name="user_name">Имя пользователя</string>
+
+    <!-- Вкладки -->
+    <string name="new_tab">Новинки</string>
+    <string name="recommended_tab">Рекомендуемое</string>
+    <string name="genres_tab">Жанры</string>
+
+    <!-- Пункты меню навигации -->
+
+    <string name="nav_profile">Профиль</string>
+    <string name="nav_auth_reg">Авторизация/регистрация</string>
+
+    <string name="nav_open_drawer">Open navigation drawer</string>
+    <string name="nav_close_drawer">Close navigation drawer</string>
+
+    <!-- Вкладки авторизации -->
+    <string name="registration_tab">Регистрация</string>
+    <string name="authorization_tab">Вход</string>
+
+    <!-- Вход -->
+    <string name="log_login">Логин</string>
+    <string name="log_password">Пароль</string>
+    <string name="button_login">Войти</string>
+    <string name="remember_password"><u>Забыли пароль?</u></string>
+
+    <!-- Регистрация -->
+    <string name="reg_login">Логин</string>
+    <string name="reg_email">Почта</string>
+    <string name="reg_password">Пароль</string>
+    <string name="reg_button">Зарегистрироваться</string>
+
+    <string name="hint_search">Поиск</string>
+
+    <!-- Страница отдельной книги -->
+    <string name="about_book">Описание</string>
+    <string name="book_reviews">Оценки и отзывы</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
