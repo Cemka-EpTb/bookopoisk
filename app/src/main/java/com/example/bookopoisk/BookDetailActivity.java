@@ -3,6 +3,7 @@ package com.example.bookopoisk;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -14,6 +15,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
 
@@ -31,9 +35,11 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
 
+        // Тулбар
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         int bookId = (Integer) getIntent().getExtras().get(EXTRA_BOOK_ID);
@@ -60,6 +66,32 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         titleLinearLayout = findViewById(R.id.title_linear_layout);
         AppBarLayout appBarLayout = findViewById(R.id.appbar);
         appBarLayout.addOnOffsetChangedListener(this);
+
+        RecyclerView recyclerView = findViewById(R.id.recycle_reviews);
+        String[] userNames = new String[ReviewsTemp.reviews.length];
+        for (int i = 0; i < userNames.length; i++) {
+            userNames[i] = ReviewsTemp.reviews[i].getName();
+        }
+
+        int[] userRating = new int[ReviewsTemp.reviews.length];
+        for (int i = 0; i < userRating.length; i++) {
+            userRating[i] = ReviewsTemp.reviews[i].getRating();
+        }
+
+        String[] userReview = new String[ReviewsTemp.reviews.length];
+        for (int i = 0; i < userReview.length; i++) {
+            userReview[i] = ReviewsTemp.reviews[i].getReview();
+        }
+
+        int[] userAvatar = new int[ReviewsTemp.reviews.length];
+        for (int i = 0; i < userAvatar.length; i++) {
+            userAvatar[i] = ReviewsTemp.reviews[i].getImageResourceId();
+        }
+
+        CaptionedReviewsAdapter adapter = new CaptionedReviewsAdapter(userNames, userRating, userReview, userAvatar);
+        recyclerView.setAdapter(adapter);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(llm);
     }
 
     @Override
@@ -80,7 +112,7 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
             titleLinearLayout.setVisibility(View.VISIBLE);
             titleLinearLayout.startAnimation(animation_appear);
         }
-        if ((Math.abs(verticalOffset) < appBarLayout.getTotalScrollRange()) && anim_switch){
+        if ((Math.abs(verticalOffset) < appBarLayout.getTotalScrollRange()) && anim_switch) {
             anim_switch = false;
             titleLinearLayout.clearAnimation();
             titleLinearLayout.startAnimation(animation_hide);

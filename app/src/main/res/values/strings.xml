@@ -36,6 +36,7 @@
     <!-- Страница отдельной книги -->
     <string name="about_book">Описание</string>
     <string name="book_reviews">Оценки и отзывы</string>
+    <string name="text_more">Далее</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

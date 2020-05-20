@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity
     // Адаптер страничного компонента фрагментов
     private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-
         SectionsPagerAdapter(@NonNull FragmentManager fm, int behavior) {
             super(fm, behavior);
         }

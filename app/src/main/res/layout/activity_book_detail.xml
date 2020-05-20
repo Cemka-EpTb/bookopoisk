@@ -29,7 +29,8 @@
                     android:layout_height="350dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="?attr/actionBarSize"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/book_name"
@@ -37,7 +38,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/book_author"
@@ -45,7 +47,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -70,7 +73,8 @@
                         android:fadingEdgeLength="50dp"
                         android:requiresFadingEdge="horizontal"
                         android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textSize="24sp" />
 
                     <TextView
                         android:id="@+id/title_book_author"
@@ -80,7 +84,8 @@
                         android:fadingEdgeLength="50dp"
                         android:requiresFadingEdge="horizontal"
                         android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
             </androidx.appcompat.widget.Toolbar>
@@ -100,36 +105,69 @@
             tools:context=".BookDetailActivity">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="17dp"
                 android:text="@string/about_book"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="26sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <com.samelody.threed.MoreTextView
                 android:id="@+id/about_book"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginEnd="6dp"
-                android:ellipsize="end"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="17dp"
+                android:maxLines="5"
                 android:text="Третья мировая стерла человечество с лица Земли. Планета опустела. Мегаполисы обращены в прах и пепел. Железные дороги ржавеют. Спутники одиноко болтаются на орбите. Радио молчит на всех частотах. Выжили только те, кто услышав сирены тревоги, успел добежать до дверей московского метро. Там, на глубине в десятки метров, на станциях и в туннелях, люди пытаются переждать конец света. Там они создали новый мирок вместо потерянного огромного мира. Они цепляются за жизнь изо всех сил и отказываются сдаваться. Они мечтают однажды вернуться наверх – когда радиационный фон от ядерных бомбардировок спадет. И не оставляют надежды найти других выживших…"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textSize="18sp" />
+                android:textSize="16sp"
+                app:moreText="@string/text_more"
+                app:moreTextColor="@color/colorPrimary" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="17dp"
                 android:text="@string/book_reviews"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="26sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/book_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="17dp"
+                android:text="7,0"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="58sp" />
+
+            <TextView
+                android:id="@+id/all_reviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="17dp"
+                android:layout_marginEnd="17dp"
+                android:text="123456"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="16sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycle_reviews"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

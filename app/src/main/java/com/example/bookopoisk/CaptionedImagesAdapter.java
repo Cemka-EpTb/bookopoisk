@@ -24,7 +24,7 @@ public class CaptionedImagesAdapter extends
         void onClick(int position);
     }
 
-    public CaptionedImagesAdapter(String[] captions1, String[] captions2, int[] imageIds) {
+    CaptionedImagesAdapter(String[] captions1, String[] captions2, int[] imageIds) {
         this.captions1 = captions1;
         this.captions2 = captions2;
         this.imageIds = imageIds;
@@ -68,7 +68,7 @@ public class CaptionedImagesAdapter extends
         return captions1.length;
     }
 
-    public void setListener(Listener listener) {
+    void setListener(Listener listener) {
         this.listener = listener;
     }
 
@@ -76,7 +76,7 @@ public class CaptionedImagesAdapter extends
 
         private CardView cardView;
 
-        public ViewHolder(@NonNull CardView v) {
+        ViewHolder(@NonNull CardView v) {
             super(v);
             cardView = v;
         }
