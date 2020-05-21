@@ -2,8 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.bookopoisk">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".serverApi.MainApplication"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon"
@@ -12,8 +17,8 @@
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".BookDetailActivity"
-            android:parentActivityName=".MainActivity"
-            android:label=""/>
+            android:label=""
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileActivity"
             android:label="@string/nav_profile" />
