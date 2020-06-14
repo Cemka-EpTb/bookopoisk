@@ -1,27 +1,28 @@
-package com.example.bookopoisk.serverApi;
+package com.example.bookopoisk.Api;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class ServerResponseModel {
-
+public class ResponseObject {
     @SerializedName("status")
     @Expose
-    private Integer status;
+    private String status;
+
     @SerializedName("message")
     @Expose
     private String message;
+
     @SerializedName("data")
     @Expose
-    private ArrayList<ServerBookData> data = null;
+    private ServerBookData data;
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -33,12 +34,11 @@ public class ServerResponseModel {
         this.message = message;
     }
 
-    public ArrayList<ServerBookData> getData() {
+    public ServerBookData getData() {
         return data;
     }
 
-    public ServerResponseModel setData(ArrayList<ServerBookData> data) {
+    public void setData(ServerBookData data) {
         this.data = data;
-        return null;
     }
 }

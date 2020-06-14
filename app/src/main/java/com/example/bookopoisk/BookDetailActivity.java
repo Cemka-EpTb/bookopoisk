@@ -1,39 +1,50 @@
 package com.example.bookopoisk;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.bookopoisk.Api.MainApplication;
+import com.example.bookopoisk.Api.ResponseObject;
+import com.example.bookopoisk.Api.ServerBookData;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.AppBarLayout.BaseOnOffsetChangedListener;
 
-public class BookDetailActivity extends AppCompatActivity implements AppBarLayout.BaseOnOffsetChangedListener {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class BookDetailActivity extends AppCompatActivity implements BaseOnOffsetChangedListener {
 
     public static final String EXTRA_BOOK_ID = "bookId";
 
+    private Context context;
     private LinearLayout titleLinearLayout;
     private Animation animation_appear;
     private Animation animation_hide;
     private boolean anim_switch;
+    ServerBookData sss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
+        context = this;
 
         // Тулбар
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -43,22 +54,51 @@ public class BookDetailActivity extends AppCompatActivity implements AppBarLayou
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         int bookId = (Integer) getIntent().getExtras().get(EXTRA_BOOK_ID);
-        String bookName = Book.books[bookId].getName();
-        TextView textName = findViewById(R.id.book_name);
-        textName.setText(bookName);
 
-        String bookAuthor = Book.books[bookId].getAuthor();
-        TextView textAuthor = findViewById(R.id.book_author);
-        textAuthor.setText(bookAuthor);
+        MainApplication.apiManager.getBookInfo(bookId, new Callback<ResponseObject>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseObject> call, @NonNull Response<ResponseObject> response) {
+                ResponseObject responseBook = response.body();
+                if (response.isSuccessful() && responseBook != null) {
+                    ServerBookData getBook = responseBook.getData();
 
-        int bookImage = Book.books[bookId].getImageResourceId();
-        ImageView imageView = findViewById(R.id.book_image);
-        imageView.setImageDrawable(ContextCompat.getDrawable(this, bookImage));
+                    String bookName = getBook.getName();
+                    TextView tvName = findViewById(R.id.book_name);
+                    tvName.setText(bookName);
+                    TextView titleBookName = findViewById(R.id.title_book_name);
+                    titleBookName.setText(bookName);
 
-        TextView titleBookName = findViewById(R.id.title_book_name);
-        titleBookName.setText(bookName);
-        TextView titleBookAuthor = findViewById(R.id.title_book_author);
-        titleBookAuthor.setText(bookAuthor);
+                    String bookAuthor = getBook.getAuthor().getName();
+                    TextView tvAuthor = findViewById(R.id.book_author);
+                    tvAuthor.setText(bookAuthor);
+                    TextView titleBookAuthor = findViewById(R.id.title_book_author);
+                    titleBookAuthor.setText(bookAuthor);
+
+                    ImageView ivBookImage = findViewById(R.id.book_image);
+                    Glide.with(context)
+                            .load(getBook.getImage().getUrl().concat("/120/170"))
+                            .thumbnail(Glide.with(context).load(R.drawable.load_gif))
+                            .error(Glide.with(context).load(R.drawable.image_not_found))
+                            .into(ivBookImage);
+
+
+                    String bookSynopsis = getBook.getSynopsis();
+                    TextView tvSynopsis = findViewById(R.id.synopsis);
+                    tvSynopsis.setText(bookSynopsis);
+
+                    String bookRating = getBook.getRating();
+                    TextView tvRating = findViewById(R.id.book_rating);
+                    tvRating.setText(bookRating);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseObject> call, @NonNull Throwable t) {
+                Toast.makeText(getBaseContext(),
+                        "Error is " + t.getMessage()
+                        , Toast.LENGTH_LONG).show();
+            }
+        });
 
         anim_switch = false;
         animation_appear = AnimationUtils.loadAnimation(this, R.anim.tv_animation_appear);

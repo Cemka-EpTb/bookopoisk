@@ -1,8 +1,8 @@
 package com.example.bookopoisk;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,15 +26,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
@@ -162,63 +153,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
+    public boolean onQueryTextChange(@NonNull String newText) {
         if (!newText.equals("")) {
             searchFragmentInterface.onTextChange(newText);
         }
         return false;
     }
 
+    // Интерфейс поиска
     interface SearchFragmentInterface {
-        RecyclerView onTextChange(String newText);
+        void onTextChange(String newText);
     }
 
-    private class SendRequest extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String[] params) {
-            String responseFromServer = null;
-
-            try {
-                String url = params[0];
-
-                URL obj = new URL(url);
-                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Accept-Language", "en-US,en,q=0.5");
-
-                String urlParameters = params[1] + "=" + params[2];
-
-                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(wr, StandardCharsets.UTF_8));
-                writer.write(urlParameters);
-                writer.close();
-                wr.close();
-
-                int responseCode = con.getResponseCode();
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                String inputLine;
-
-                StringBuffer response = new StringBuffer();
-                while ((inputLine = reader.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                reader.close();
-
-                responseFromServer = response.toString();
-            } catch (Exception e) {
-                return e.getMessage();
-            }
-
-            return responseFromServer;
-        }
-
-        @Override
-        protected void onPostExecute(String message) {
-
-        }
-    }
 
     // Адаптер страничного компонента фрагментов
     private class SectionsPagerAdapter extends FragmentPagerAdapter {

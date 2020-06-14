@@ -29,8 +29,7 @@
                     android:layout_height="350dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="?attr/actionBarSize"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/image_not_found"
+                    android:scaleType="fitXY"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -117,13 +116,12 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/about_book"
+                android:id="@+id/synopsis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="17dp"
-                android:text="Третья мировая стерла человечество с лица Земли. Планета опустела. Мегаполисы обращены в прах и пепел. Железные дороги ржавеют. Спутники одиноко болтаются на орбите. Радио молчит на всех частотах. Выжили только те, кто услышав сирены тревоги, успел добежать до дверей московского метро. Там, на глубине в десятки метров, на станциях и в туннелях, люди пытаются переждать конец света. Там они создали новый мирок вместо потерянного огромного мира. Они цепляются за жизнь изо всех сил и отказываются сдаваться. Они мечтают однажды вернуться наверх – когда радиационный фон от ядерных бомбардировок спадет. И не оставляют надежды найти других выживших…"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp" />
 

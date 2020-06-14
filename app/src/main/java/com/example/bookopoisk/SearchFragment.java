@@ -13,10 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookopoisk.serverApi.MainApplication;
-import com.example.bookopoisk.serverApi.SearchBookModel;
-import com.example.bookopoisk.serverApi.ServerBookData;
-import com.example.bookopoisk.serverApi.ServerResponseModel;
+import com.example.bookopoisk.Api.MainApplication;
+import com.example.bookopoisk.Api.ServerBookData;
+import com.example.bookopoisk.Api.ResponseList;
 
 import java.util.ArrayList;
 
@@ -53,27 +52,35 @@ public class SearchFragment extends Fragment implements MainActivity.SearchFragm
     }
 
     @Override
-    public RecyclerView onTextChange(String newText) {
-        SearchBookModel searchBook = new SearchBookModel(newText, " ");
-        MainApplication.apiManager.searchBook(searchBook, new Callback<ServerResponseModel>() {
+    public void onTextChange(@NonNull String newText) {
+        
+        ServerBookData searchBook = new ServerBookData(newText, 1800, 2000);
+        MainApplication.apiManager.searchBook(searchBook, new Callback<ResponseList>() {
             @Override
-            public void onResponse(Call<ServerResponseModel> call, Response<ServerResponseModel> response) {
-                ServerResponseModel responseBook = response.body();
+            public void onResponse(@NonNull Call<ResponseList> call, @NonNull Response<ResponseList> response) {
+                ResponseList responseBook = response.body();
                 if (response.isSuccessful() && responseBook != null) {
                     if (!responseBook.getData().isEmpty()) {
                         ArrayList<ServerBookData> foundBooks = responseBook.getData();
                         int bookQuantity = foundBooks.size();
                         String[] bookNames = new String[bookQuantity];
                         String[] bookAuthors = new String[bookQuantity];
-                        int[] bookImages = new int[bookQuantity];
+                        String[] bookImageUrls = new String[bookQuantity];
+                        int[] bookId = new int[bookQuantity];
 
                         for (int i = 0; i < bookQuantity; i++) {
-                            bookAuthors[i] = foundBooks.get(i).getAuthorName();
-                            bookNames[i] = foundBooks.get(i).getBookName();
-                            bookImages[i] = R.drawable.image_not_found;
+                            bookAuthors[i] = foundBooks.get(i).getAuthor().getName();
+                            bookNames[i] = foundBooks.get(i).getName();
+                            try {
+                                bookImageUrls[i] = foundBooks.get(i).getImage().getUrl().concat("/125/175");
+                            } catch (Exception e) {
+                                bookImageUrls[i] = null;
+                            }
+
+                            bookId[i] = foundBooks.get(i).getId();
                         }
 
-                        adapter = new CaptionedImagesAdapter(bookNames, bookAuthors, bookImages);
+                        adapter = new CaptionedImagesAdapter(bookNames, bookAuthors, bookImageUrls, bookId);
                         recyclerView.setAdapter(adapter);
                         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
                         recyclerView.setLayoutManager(layoutManager);
@@ -97,13 +104,11 @@ public class SearchFragment extends Fragment implements MainActivity.SearchFragm
             }
 
             @Override
-            public void onFailure(Call<ServerResponseModel> call, Throwable t) {
+            public void onFailure(Call<ResponseList> call, Throwable t) {
                 Toast.makeText(getContext(),
                         "Error is " + t.getMessage()
                         , Toast.LENGTH_LONG).show();
             }
         });
-
-        return recyclerView;
     }
 }

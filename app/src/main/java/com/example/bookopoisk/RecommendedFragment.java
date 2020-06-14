@@ -5,10 +5,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import com.example.bookopoisk.Api.MainApplication;
+import com.example.bookopoisk.Api.ServerBookData;
+import com.example.bookopoisk.Api.ResponseList;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -20,41 +32,59 @@ public class RecommendedFragment extends Fragment {
         // Required empty public constructor
     }
 
+    private CaptionedImagesAdapter adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        RecyclerView recyclerView = (RecyclerView) inflater.inflate(
+        final RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.fragment_recommended, container, false
         );
 
-        String[] bookNames = new String[3];
-        for (int i = 0; i < bookNames.length; i++) {
-            bookNames[i] = Book.books[i * 3].getName();
-        }
-
-        String[] bookAuthor = new String[3];
-        for (int i = 0; i < bookAuthor.length; i++) {
-            bookAuthor[i] = Book.books[i * 3].getAuthor();
-        }
-
-        int[] bookImages = new int[3];
-        for (int i = 0; i < bookImages.length; i++) {
-            bookImages[i] = Book.books[i * 3].getImageResourceId();
-        }
-
-        CaptionedImagesAdapter adapter = new CaptionedImagesAdapter(bookNames, bookAuthor, bookImages);
-        recyclerView.setAdapter(adapter);
-        StaggeredGridLayoutManager layoutManager =
-                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-
-        adapter.setListener(new CaptionedImagesAdapter.Listener() {
+        MainApplication.apiManager.getAllBooks(new Callback<ResponseList>() {
             @Override
-            public void onClick(int position) {
-                Intent intent = new Intent(getActivity(), BookDetailActivity.class);
-                intent.putExtra(BookDetailActivity.EXTRA_BOOK_ID, position * 3);
-                getActivity().startActivity(intent);
+            public void onResponse(@NonNull Call<ResponseList> call, @NonNull Response<ResponseList> response) {
+                ResponseList responseBook = response.body();
+                if (response.isSuccessful() && responseBook != null) {
+                    ArrayList<ServerBookData> allBooks = responseBook.getData();
+                    int bookQuantity = allBooks.size() / 10;
+                    String[] bookNames = new String[bookQuantity];
+                    String[] bookAuthors = new String[bookQuantity];
+                    String[] bookImagesUrl = new String[bookQuantity];
+                    int[] bookId = new int[bookQuantity];
+
+                    for (int i = 0; i < bookQuantity; i++) {
+                        bookAuthors[i] = allBooks.get(i).getAuthor().getName();
+                        bookNames[i] = allBooks.get(i).getName();
+                        bookId[i] = allBooks.get(i).getAuthor().getId();
+                        bookImagesUrl[i] = allBooks.get(i).getImage().getUrl().concat("/150/200.jpg");
+                    }
+
+                    adapter = new CaptionedImagesAdapter(bookNames, bookAuthors, bookImagesUrl, bookId);
+                    recyclerView.setAdapter(adapter);
+                    GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+                    recyclerView.setLayoutManager(layoutManager);
+
+                    adapter.setListener(new CaptionedImagesAdapter.Listener() {
+                        @Override
+                        public void onClick(int position) {
+                            Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+                            intent.putExtra(BookDetailActivity.EXTRA_BOOK_ID, position);
+                            getActivity().startActivity(intent);
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(),
+                            String.format("Response is %s", String.valueOf(response.code()))
+                            , Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseList> call, @NonNull Throwable t) {
+                Toast.makeText(container.getContext(),
+                        "Error is " + t.getMessage()
+                        , Toast.LENGTH_LONG).show();
             }
         });
 
