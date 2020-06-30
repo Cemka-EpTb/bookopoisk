@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity
     ViewPager pager;
     Toolbar toolbar;
     SearchFragmentInterface searchFragmentInterface;
+    String textSearch;
+    Handler sHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity
         // Связывание TabLayout с ViewPager
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(pager);
+
+        sHandler = new Handler();
     }
 
     // Добавление поиска
@@ -80,6 +84,7 @@ public class MainActivity extends AppCompatActivity
 
         MenuItem searchItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.hint_search));
 
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
@@ -154,10 +159,21 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onQueryTextChange(@NonNull String newText) {
-        if (!newText.equals("")) {
-            searchFragmentInterface.onTextChange(newText);
-        }
-        return false;
+        textSearch = newText;
+        sHandler.removeCallbacksAndMessages(null);
+
+        sHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!textSearch.equals("")) {
+                    searchFragmentInterface.onTextChange(textSearch);
+                } else {
+                    searchFragmentInterface.onTextChange("");
+                }
+            }
+        }, 300);
+
+        return true;
     }
 
     // Интерфейс поиска

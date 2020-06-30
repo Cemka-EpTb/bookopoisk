@@ -53,6 +53,11 @@ public class SearchFragment extends Fragment implements MainActivity.SearchFragm
 
     @Override
     public void onTextChange(@NonNull String newText) {
+
+        if (newText.equals("")) {
+            recyclerView.setAdapter(null);
+            return;
+        }
         
         ServerBookData searchBook = new ServerBookData(newText, 1800, 2000);
         MainApplication.apiManager.searchBook(searchBook, new Callback<ResponseList>() {
@@ -98,13 +103,13 @@ public class SearchFragment extends Fragment implements MainActivity.SearchFragm
                     }
                 } else {
                     Toast.makeText(getContext(),
-                            String.format("Response is %s", String.valueOf(response.code()))
+                            String.format("Response is %s", response.code())
                             , Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseList> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseList> call, @NonNull Throwable t) {
                 Toast.makeText(getContext(),
                         "Error is " + t.getMessage()
                         , Toast.LENGTH_LONG).show();
