@@ -1,11 +1,13 @@
 package com.example.bookopoisk;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +22,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -28,7 +29,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener,
+        View.OnClickListener {
 
     FragmentTransaction fragmentTransaction;
     Fragment searchFragment;
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity
     SearchFragmentInterface searchFragmentInterface;
     String textSearch;
     Handler sHandler;
+    NavigationView navigationView;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,8 @@ public class MainActivity extends AppCompatActivity
 
         // Добавляем "бургер"
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this,
                 drawer,
                 toolbar,
                 R.string.nav_open_drawer,
@@ -60,9 +65,8 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Регистрация слушателя в NavigationView
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        // Боковое меню в зависимости от входа в приложения
+        navigationView = findViewById(R.id.nav_view);
 
         // Добавление табов
         SectionsPagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),
@@ -75,6 +79,37 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(pager);
 
         sHandler = new Handler();
+
+        // Настройки
+        prefs = getSharedPreferences("auth",MODE_PRIVATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Боковое меню в зависимости от входа в приложения
+        String login = prefs.getString("login", "");
+
+        if (!login.equals("")) {
+            navigationView.removeHeaderView(navigationView.getHeaderView(0));
+            navigationView.addHeaderView(getLayoutInflater().inflate(R.layout.nav_header, null));
+
+            TextView hLogin = navigationView.getHeaderView(0).findViewById(R.id.header_login);
+            hLogin.setText(login);
+
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.menu_nav);
+
+            navigationView.setNavigationItemSelectedListener(this);
+        } else {
+            navigationView.removeHeaderView(navigationView.getHeaderView(0));
+            navigationView.addHeaderView(getLayoutInflater().inflate(R.layout.nav_header_anon, null));
+            navigationView.getMenu().clear();
+
+            TextView tv = navigationView.getHeaderView(0).findViewById(R.id.text_view_anon);
+            tv.setOnClickListener(this);
+        }
     }
 
     // Добавление поиска
@@ -127,15 +162,29 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_profile:
                 intent = new Intent(this, ProfileActivity.class);
                 break;
-            case R.id.nav_reg_auth:
-                intent = new Intent(this, LoginActivity.class);
-                break;
+            case R.id.nav_logout:
+                getSharedPreferences("auth", MODE_PRIVATE).edit().remove("login").apply();
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                recreate();
+                return false;
         }
 
         startActivity(intent);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    // Нажетие по тексту в навигациионом меню для не зарегистрированного пользователя
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.text_view_anon) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
     }
 
     // Закрытие навигационного меню при нажатии кнопки назад
@@ -175,6 +224,7 @@ public class MainActivity extends AppCompatActivity
 
         return true;
     }
+
 
     // Интерфейс поиска
     interface SearchFragmentInterface {

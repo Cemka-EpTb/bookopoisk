@@ -38,7 +38,6 @@ public class BookDetailActivity extends AppCompatActivity implements BaseOnOffse
     private Animation animation_appear;
     private Animation animation_hide;
     private boolean anim_switch;
-    ServerBookData sss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

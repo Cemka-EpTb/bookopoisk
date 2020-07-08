@@ -7,11 +7,12 @@
     <string name="recommended_tab">Рекомендуемое</string>
     <string name="genres_tab">Жанры</string>
 
-    <!-- Пункты меню навигации -->
-
+    <!-- Меню навигации -->
+    <string name="anon_text">Вы не вошли в аккаунт. Нажмите здесь чтобы войти.</string>
     <string name="nav_profile">Профиль</string>
-    <string name="nav_auth_reg">Авторизация/регистрация</string>
+    <string name="nav_logout">Выход</string>
 
+    <!-- Это важно для навигационного меню, но не знаю зачем... -->
     <string name="nav_open_drawer">Open navigation drawer</string>
     <string name="nav_close_drawer">Close navigation drawer</string>
 
@@ -30,6 +31,10 @@
     <string name="reg_email">Почта</string>
     <string name="reg_password">Пароль</string>
     <string name="reg_button">Зарегистрироваться</string>
+
+    <string name="empty_login_error">Логин не должен быть пустой!</string>
+    <string name="empty_email_error">Почта не должена быть пустой!</string>
+    <string name="empty_password_error">Пароль должен быть не короче 8 символов!</string>
 
     <!-- Поиск -->
     <string name="description_search">Поиск</string>
