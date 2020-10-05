@@ -8,12 +8,13 @@
     <application
         android:name=".Api.MainApplication"
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".ReviewActivity" />
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".BookDetailActivity"

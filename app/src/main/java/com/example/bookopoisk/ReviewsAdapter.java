@@ -12,50 +12,50 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CaptionedReviewsAdapter extends RecyclerView.Adapter<CaptionedReviewsAdapter.ViewHolder> {
+import java.util.ArrayList;
 
-    private String[] names;
-    private int[] rating;
-    private String[] reviews;
-    private int[] imageIds;
+public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder> {
 
-    CaptionedReviewsAdapter(String[] names, int[] rating, String[] reviews, int[] imageIds) {
+    private ArrayList<String> names;
+    private ArrayList<String> rating;
+    private ArrayList<String> reviews;
+
+    ReviewsAdapter(ArrayList<String> names, ArrayList<String> rating, ArrayList<String> reviews) {
         this.names = names;
         this.rating = rating;
         this.reviews = reviews;
-        this.imageIds = imageIds;
     }
 
     @NonNull
     @Override
-    public CaptionedReviewsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ReviewsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         CardView cv = (CardView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_captioned_reviews, parent, false);
-        return new CaptionedReviewsAdapter.ViewHolder(cv);
+                .inflate(R.layout.card_reviews, parent, false);
+        return new ReviewsAdapter.ViewHolder(cv);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CaptionedReviewsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ReviewsAdapter.ViewHolder holder, int position) {
         CardView cardView = holder.cardView;
         ImageView imageView = cardView.findViewById(R.id.user_avatar);
         Drawable drawable =
-                ContextCompat.getDrawable(cardView.getContext(), imageIds[position]);
+                ContextCompat.getDrawable(cardView.getContext(), R.mipmap.avatar_default);
         imageView.setImageDrawable(drawable);
-        imageView.setContentDescription(names[position]);
+        imageView.setContentDescription(names.get(position));
 
         TextView userName = cardView.findViewById(R.id.user_name);
-        userName.setText(names[position]);
+        userName.setText(names.get(position));
 
         TextView userReview = cardView.findViewById(R.id.user_review);
-        userReview.setText(reviews[position]);
+        userReview.setText(reviews.get(position));
 
         TextView userRating = cardView.findViewById(R.id.user_rating);
-        userRating.setText(new StringBuilder().append(rating[position]).append(" из 10").toString());
+        userRating.setText(new StringBuilder().append(rating.get(position)).append(" из 10").toString());
     }
 
     @Override
     public int getItemCount() {
-        return names.length;
+        return names.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

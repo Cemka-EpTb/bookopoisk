@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="17dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="17dp"
+    android:text="Ваша рецензия"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:textSize="24sp"
+    android:textStyle="bold" />

@@ -27,6 +27,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener,
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity
                 intent = new Intent(this, ProfileActivity.class);
                 break;
             case R.id.nav_logout:
+                FirebaseAuth.getInstance().signOut();
                 getSharedPreferences("auth", MODE_PRIVATE).edit().remove("login").apply();
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);

@@ -125,6 +125,12 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp" />
 
+            <LinearLayout
+                android:id="@+id/layout_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -144,7 +150,7 @@
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="17dp"
-                android:text="7,0"
+                android:text="5,5"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="58sp" />
 
@@ -155,7 +161,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="17dp"
                 android:layout_marginEnd="17dp"
-                android:text="123456"
+                android:text="100"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp" />
 

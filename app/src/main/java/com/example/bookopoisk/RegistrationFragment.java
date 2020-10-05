@@ -1,20 +1,27 @@
 package com.example.bookopoisk;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -22,6 +29,7 @@ import java.util.Objects;
  */
 public class RegistrationFragment extends Fragment implements View.OnClickListener {
 
+    private ProgressBar progressBar; // ProgressBar
     private EditText login;
     private EditText email;
     private TextInputLayout til_password;
@@ -42,6 +50,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         password = view.findViewById(R.id.password);
         til_password = view.findViewById(R.id.til_password);
         btnRegistration = view.findViewById(R.id.button_reg);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         btnRegistration.setOnClickListener(this);
         return view;
@@ -59,20 +68,41 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             password.requestFocus();
             til_password.setError(getResources().getString(R.string.empty_password_error));
         } else {
-            if(true) { // Успешно зарегистрирован
-                EditText etLogin = getActivity().findViewById(R.id.text_login);
-                etLogin.setText(login.getText().toString());
+            progressBar.setVisibility(View.VISIBLE);
+            btnRegistration.setVisibility(View.INVISIBLE);
 
-                EditText etPassword = getActivity().findViewById(R.id.text_password);
-                etPassword.setText(password.getText().toString());
+            FirebaseAuth.getInstance()
+                    .createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {  // Успешно зарегистрирован
+                                progressBar.setVisibility(View.INVISIBLE);
+                                btnRegistration.setVisibility(View.VISIBLE);
 
-                Toast.makeText(getContext(),"Успешно зарегистрирован.", Toast.LENGTH_SHORT).show();
+                                EditText etLogin = getActivity().findViewById(R.id.text_login);
+                                etLogin.setText(email.getText().toString());
 
-                ViewPager pager = getActivity().findViewById(R.id.pager);
-                pager.setCurrentItem(0);
-            } else {
-                Toast.makeText(getContext(),"Проверьте правильность введённых данных.", Toast.LENGTH_SHORT).show();
-            }
+                                EditText etPassword = getActivity().findViewById(R.id.text_password);
+                                etPassword.setText(password.getText().toString());
+
+                                Toast.makeText(getContext(), "Успешно зарегистрирован.", Toast.LENGTH_SHORT).show();
+
+                                SharedPreferences.Editor editor = Objects.requireNonNull(getActivity()).getSharedPreferences("auth", MODE_PRIVATE).edit();
+                                String goodLogin = email.getText().toString().replace(".", "-");
+                                editor.putString("login", goodLogin).apply();
+                                getActivity().finish();
+
+                                /*ViewPager pager = getActivity().findViewById(R.id.pager);
+                                pager.setCurrentItem(0);*/
+                            } else {
+                                progressBar.setVisibility(View.INVISIBLE);
+                                btnRegistration.setVisibility(View.VISIBLE);
+
+                                Toast.makeText(getContext(), "Проверьте правильность введённых данных.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }
     }
 }

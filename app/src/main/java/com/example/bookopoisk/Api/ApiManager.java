@@ -13,7 +13,8 @@ public class ApiManager {
     private final String BASE_URL = "http://192.168.12.12/";
 
     private ApiManager() {
-        Retrofit retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit
+                .Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
